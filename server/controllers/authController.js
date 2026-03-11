@@ -19,7 +19,16 @@ const getTokenExpiry = () => {
 
 const generateToken = (id) => {
   const expiresIn = getTokenExpiry();
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn });
+
+  try {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn });
+  } catch (error) {
+    try {
+      return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    } catch (fallbackError) {
+      return jwt.sign({ id }, process.env.JWT_SECRET);
+    }
+  }
 };
 
 // @desc    Register a new user
