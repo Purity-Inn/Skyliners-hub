@@ -12,11 +12,34 @@ console.log("[server] DB connect invoked");
 
 const app = express();
 
+const normalizeOrigin = (value) => (value || "").replace(/\/$/, "");
 const allowedOrigins = [
   "http://localhost:5173",
   process.env.CLIENT_URL,
-].filter(Boolean);
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+]
+  .filter(Boolean)
+  .map(normalizeOrigin);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = normalizeOrigin(origin);
+      const isAllowed = allowedOrigins.includes(normalizedOrigin);
+      const isVercelPreview = /\.vercel\.app$/.test(new URL(normalizedOrigin).hostname);
+
+      if (isAllowed || isVercelPreview) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
