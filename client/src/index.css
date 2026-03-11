@@ -1,3 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0a0f1e;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0f1e;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #f97316;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+  }
+
+  .glow-btn {
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    color: white;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+  }
+
+  .glow-btn:hover {
+    box-shadow: 0 0 35px rgba(249, 115, 22, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .glow-border {
+    border: 1px solid rgba(249, 115, 22, 0.4);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+  }
+
+  .input-dark {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    width: 100%;
+    transition: border 0.3s;
+  }
+
+  .input-dark:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 10px rgba(249,115,22,0.2);
+  }
+
+  .input-dark::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+}
