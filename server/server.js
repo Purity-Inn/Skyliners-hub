@@ -47,6 +47,10 @@ app.use("/api/hof", hofRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/upload", uploadRoutes);
 
+app.get("/", (req, res) => {
+  res.json({ message: "🏆 Skyliners Hub backend is live" });
+});
+
 app.get("/api", (req, res) => {
   res.json({ message: "🏆 Skyliners Hub API is running!" });
 });
