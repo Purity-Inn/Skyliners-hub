@@ -24,3 +24,5 @@ services:
         value: 5000
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: 22.21.1
