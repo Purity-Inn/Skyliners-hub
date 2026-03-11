@@ -1,8 +1,26 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const generateToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+const getTokenExpiry = () => {
+  const rawValue = process.env.JWT_EXPIRES_IN;
+
+  if (!rawValue) {
+    return "7d";
+  }
+
+  const normalizedValue = String(rawValue).trim().replace(/^['"]|['"]$/g, "");
+
+  if (/^\d+$/.test(normalizedValue)) {
+    return Number(normalizedValue);
+  }
+
+  return normalizedValue;
+};
+
+const generateToken = (id) => {
+  const expiresIn = getTokenExpiry();
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn });
+};
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
