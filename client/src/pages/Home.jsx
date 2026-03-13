@@ -162,6 +162,24 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-white/10 py-8 text-center text-white/30 text-sm">
         <p className="font-display text-xl gradient-text mb-2">SKYLINERS HUB</p>
+        <div className="flex items-center justify-center gap-6 mb-2">
+          <a
+            href="https://www.tiktok.com/@kirinyaga_rollball_?_r=1&_t=ZS-94f73hzHoft"
+            target="_blank"
+            rel="noreferrer"
+            className="text-white/60 hover:text-glow transition-colors"
+          >
+            TikTok
+          </a>
+          <a
+            href="https://www.instagram.com/kirinyaga_rollball_ke?igsh=NGpxaGZlb2RrOWts"
+            target="_blank"
+            rel="noreferrer"
+            className="text-white/60 hover:text-glow transition-colors"
+          >
+            Instagram
+          </a>
+        </div>
         <p>© 2018 - {new Date().getFullYear()} Kirinyaga University Skyliners. All rights reserved.</p>
       </footer>
     </div>

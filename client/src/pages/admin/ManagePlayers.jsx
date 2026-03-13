@@ -3,7 +3,7 @@ import { getPlayers, deletePlayer } from "../../services/playerService";
 import api from "../../services/api";
 
 const emptyForm = {
-  name: "", jerseyNumber: "", position: "Keeper", gender: "Male",
+  name: "", jerseyNumber: "", position: "", gender: "Male",
   bio: "", dateOfBirth: "", yearJoined: "", achievements: "",
 };
 
@@ -16,7 +16,6 @@ export default function ManagePlayers() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const positions = ["Keeper", "Center", "Two", "Zero", "Captain", "Vice Captain"];
   const load = () => getPlayers().then((r) => setPlayers(r.data)).catch(() => {});
   useEffect(() => { load(); }, []);
 
@@ -110,15 +109,13 @@ export default function ManagePlayers() {
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Position *</label>
-              <select name="position" value={form.position} onChange={handleChange} className="input-dark">
-                {positions.map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
+              <input name="position" value={form.position} onChange={handleChange} required className="input-dark" placeholder="e.g. Defender, Center, Keeper" />
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Gender *</label>
               <select name="gender" value={form.gender} onChange={handleChange} className="input-dark">
-                <option value="Male">Male — Boys Team</option>
-                <option value="Female">Female — Girls Team</option>
+                <option value="Male">Male — Men Team</option>
+                <option value="Female">Female — Women Team</option>
               </select>
             </div>
             <div>
@@ -161,13 +158,13 @@ export default function ManagePlayers() {
           </form>
         </div>
 
-        {/* Boys Team */}
+        {/* Men Team */}
         <div className="glass-card glow-border p-6 mb-6">
           <h2 className="font-display text-2xl gradient-text tracking-wider mb-6">
-            👦 BOYS TEAM ({boys.length})
+            👨 MEN TEAM ({boys.length})
           </h2>
           {boys.length === 0 ? (
-            <p className="text-white/30 text-center py-6">No boys players added yet</p>
+            <p className="text-white/30 text-center py-6">No men players added yet</p>
           ) : (
             <div className="space-y-3">
               {boys.map((player) => (
@@ -195,13 +192,13 @@ export default function ManagePlayers() {
           )}
         </div>
 
-        {/* Girls Team */}
+        {/* Women Team */}
         <div className="glass-card border border-pink-500/20 p-6">
           <h2 className="font-display text-2xl tracking-wider mb-6" style={{ color: "#f472b6" }}>
-            👧 GIRLS TEAM ({girls.length})
+            👩 WOMEN TEAM ({girls.length})
           </h2>
           {girls.length === 0 ? (
-            <p className="text-white/30 text-center py-6">No girls players added yet</p>
+            <p className="text-white/30 text-center py-6">No women players added yet</p>
           ) : (
             <div className="space-y-3">
               {girls.map((player) => (

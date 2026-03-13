@@ -2,12 +2,8 @@ const mongoose = require("mongoose");
 
 const playerSchema = new mongoose.Schema({
   name:         { type: String, required: true, trim: true },
-  jerseyNumber: { type: Number, required: true, unique: true },
-  position:     { 
-    type: String, 
-    required: true, 
-    enum: ["Keeper", "Center", "Two", "Zero", "Captain", "Vice Captain"] 
-  },
+  jerseyNumber: { type: Number, required: true },
+  position:     { type: String, required: true, trim: true },
   gender:       { 
     type: String, 
     required: true, 

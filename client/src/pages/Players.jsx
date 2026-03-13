@@ -9,8 +9,6 @@ export default function Players() {
   const [position, setPosition] = useState("All");
   const [team, setTeam] = useState("All");
 
-  const positions = ["All", "Keeper", "Center", "Two", "Zero", "Captain", "Vice Captain"];
-
   useEffect(() => {
     getPlayers()
       .then((r) => setPlayers(r.data))
@@ -25,8 +23,13 @@ export default function Players() {
     return matchSearch && matchPosition && matchTeam;
   });
 
-  const boys = filtered.filter((p) => p.gender === "Male");
-  const girls = filtered.filter((p) => p.gender === "Female");
+  const positions = [
+    "All",
+    ...new Set(players.map((player) => player.position).filter(Boolean)),
+  ];
+
+  const menPlayers = filtered.filter((p) => p.gender === "Male");
+  const womenPlayers = filtered.filter((p) => p.gender === "Female");
 
   const PlayerCard = ({ player, i, color }) => (
     <Link
@@ -98,7 +101,7 @@ export default function Players() {
                   : "border-white/10 text-white/50 hover:border-white/30 hover:text-white"
               }`}
             >
-              {t === "All" ? "🏆 All Players" : t === "Male" ? "👦 Boys Team" : "👧 Girls Team"}
+              {t === "All" ? "🏆 All Players" : t === "Male" ? "👨 Men Team" : "👩 Women Team"}
             </button>
           ))}
         </div>
@@ -126,36 +129,36 @@ export default function Players() {
           <div className="text-center text-white/40 py-20">No players found</div>
         ) : (
           <>
-            {/* Boys Team */}
-            {(team === "All" || team === "Male") && boys.length > 0 && (
+            {/* Men Team */}
+            {(team === "All" || team === "Male") && menPlayers.length > 0 && (
               <div className="mb-14">
                 <div className="flex items-center gap-4 mb-6">
-                  <h2 className="font-display text-3xl gradient-text tracking-wider">👦 BOYS TEAM</h2>
+                  <h2 className="font-display text-3xl gradient-text tracking-wider">👨 MEN TEAM</h2>
                   <span className="text-xs bg-glow/10 border border-glow/30 text-glow px-3 py-1 rounded-full">
-                    {boys.length} players
+                    {menPlayers.length} players
                   </span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {boys.map((player, i) => (
+                  {menPlayers.map((player, i) => (
                     <PlayerCard key={player._id} player={player} i={i} color="orange" />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Girls Team */}
-            {(team === "All" || team === "Female") && girls.length > 0 && (
+            {/* Women Team */}
+            {(team === "All" || team === "Female") && womenPlayers.length > 0 && (
               <div>
                 <div className="flex items-center gap-4 mb-6">
                   <h2 className="font-display text-3xl tracking-wider" style={{ color: "#f472b6" }}>
-                    👧 GIRLS TEAM
+                    👩 WOMEN TEAM
                   </h2>
                   <span className="text-xs border px-3 py-1 rounded-full" style={{ color: "#f472b6", borderColor: "rgba(244,114,182,0.3)", background: "rgba(244,114,182,0.1)" }}>
-                    {girls.length} players
+                    {womenPlayers.length} players
                   </span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {girls.map((player, i) => (
+                  {womenPlayers.map((player, i) => (
                     <PlayerCard key={player._id} player={player} i={i} color="pink" />
                   ))}
                 </div>

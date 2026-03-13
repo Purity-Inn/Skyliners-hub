@@ -55,6 +55,22 @@ export default function Navbar() {
 
         {/* Auth */}
         <div className="flex items-center gap-3">
+          <a
+            href="https://www.tiktok.com/@kirinyaga_rollball_?_r=1&_t=ZS-94f73hzHoft"
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-white/70 hover:text-glow transition-colors hidden md:inline"
+          >
+            TikTok
+          </a>
+          <a
+            href="https://www.instagram.com/kirinyaga_rollball_ke?igsh=NGpxaGZlb2RrOWts"
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-white/70 hover:text-glow transition-colors hidden md:inline"
+          >
+            Instagram
+          </a>
           {user ? (
             <>
               <span className="text-sm text-white/60 hidden md:block">
