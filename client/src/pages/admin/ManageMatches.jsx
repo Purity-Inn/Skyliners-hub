@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getMatches, createMatch, updateMatch, deleteMatch } from "../../services/matchService";
 
 const emptyForm = {
-  opponent: "", date: "", venue: "",
+  teamA: "Skyliners", teamB: "", opponent: "", date: "", venue: "",
   competition: "Friendly", status: "upcoming",
   skylinerScore: "", opponentScore: "", outcome: "", notes: "",
 };
@@ -24,7 +24,9 @@ export default function ManageMatches() {
     setLoading(true);
     try {
       const data = {
-        opponent: form.opponent,
+        teamA: form.teamA,
+        teamB: form.teamB,
+        opponent: form.teamB,
         date: form.date,
         venue: form.venue,
         competition: form.competition,
@@ -57,7 +59,9 @@ export default function ManageMatches() {
   const handleEdit = (match) => {
     setEditing(match._id);
     setForm({
-      opponent: match.opponent,
+      teamA: match.teamA || "Skyliners",
+      teamB: match.teamB || match.opponent || "",
+      opponent: match.teamB || match.opponent || "",
       date: match.date?.split("T")[0] || "",
       venue: match.venue,
       competition: match.competition,
@@ -97,8 +101,12 @@ export default function ManageMatches() {
           </h2>
           <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Opponent *</label>
-              <input name="opponent" value={form.opponent} onChange={handleChange} required className="input-dark" placeholder="Team name" />
+              <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Team A *</label>
+              <input name="teamA" value={form.teamA} onChange={handleChange} required className="input-dark" placeholder="e.g. Skyliners" />
+            </div>
+            <div>
+              <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Team B *</label>
+              <input name="teamB" value={form.teamB} onChange={handleChange} required className="input-dark" placeholder="e.g. Opponent or another team" />
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Date *</label>
@@ -172,7 +180,7 @@ export default function ManageMatches() {
               {matches.map((match) => (
                 <div key={match._id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all">
                   <div>
-                    <p className="font-semibold text-white">Skyliners vs {match.opponent}</p>
+                    <p className="font-semibold text-white">{match.teamA || "Skyliners"} vs {match.teamB || match.opponent}</p>
                     <p className="text-white/40 text-xs mt-1">
                       📅 {new Date(match.date).toDateString()} · 📍 {match.venue}
                     </p>

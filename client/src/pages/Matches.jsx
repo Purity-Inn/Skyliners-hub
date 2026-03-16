@@ -57,7 +57,7 @@ export default function Matches() {
                 <div className="flex-1">
                   <p className="text-glow text-xs uppercase tracking-widest mb-1">{match.competition}</p>
                   <h3 className="text-xl font-semibold">
-                    Skyliners <span className="text-white/30 mx-2">vs</span> {match.opponent}
+                    {match.teamA || "Skyliners"} <span className="text-white/30 mx-2">vs</span> {match.teamB || match.opponent}
                   </h3>
                   <div className="flex gap-4 mt-2 text-white/40 text-sm">
                     <span>📅 {new Date(match.date).toDateString()}</span>

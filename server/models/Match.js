@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const matchSchema = new mongoose.Schema({
+  teamA:        { type: String, trim: true, default: "Skyliners" },
+  teamB:        { type: String, trim: true },
   opponent:    { type: String, required: true },
   date:        { type: Date, required: true },
   venue:       { type: String, required: true },
@@ -13,5 +15,12 @@ const matchSchema = new mongoose.Schema({
   },
   notes: { type: String, default: "" },
 }, { timestamps: true });
+
+matchSchema.pre("validate", function syncTeams(next) {
+  if (!this.teamA) this.teamA = "Skyliners";
+  if (!this.teamB && this.opponent) this.teamB = this.opponent;
+  if (!this.opponent && this.teamB) this.opponent = this.teamB;
+  next();
+});
 
 module.exports = mongoose.model("Match", matchSchema);
