@@ -9,6 +9,7 @@ import Matches from "./pages/Matches";
 import Gallery from "./pages/Gallery";
 import HallOfFame from "./pages/HallOfFame";
 import Announcements from "./pages/Announcements";
+import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManagePlayers from "./pages/admin/ManagePlayers";
 import ManageMatches from "./pages/admin/ManageMatches";
@@ -42,6 +43,7 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/hall-of-fame" element={<HallOfFame />} />
         <Route path="/announcements" element={<Announcements />} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/players" element={<AdminRoute><ManagePlayers /></AdminRoute>} />
         <Route path="/admin/matches" element={<AdminRoute><ManageMatches /></AdminRoute>} />
