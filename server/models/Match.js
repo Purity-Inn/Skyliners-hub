@@ -16,11 +16,10 @@ const matchSchema = new mongoose.Schema({
   notes: { type: String, default: "" },
 }, { timestamps: true });
 
-matchSchema.pre("validate", function syncTeams(next) {
+matchSchema.pre("validate", function syncTeams() {
   if (!this.teamA) this.teamA = "Skyliners";
   if (!this.teamB && this.opponent) this.teamB = this.opponent;
   if (!this.opponent && this.teamB) this.opponent = this.teamB;
-  next();
 });
 
 module.exports = mongoose.model("Match", matchSchema);
