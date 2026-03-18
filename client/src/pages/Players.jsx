@@ -13,10 +13,10 @@ export default function Players() {
     "Left Wing",
     "Right Wing",
     "Center",
-    "Defender",
     "Keeper",
-    "Pivot",
   ];
+
+  const hiddenPositions = new Set(["defender", "pivot"]);
 
   useEffect(() => {
     getPlayers()
@@ -43,7 +43,9 @@ export default function Players() {
     "All",
     ...new Set([
       ...suggestedPositions,
-      ...players.map((player) => normalizePosition(player.position)).filter(Boolean),
+      ...players
+        .map((player) => normalizePosition(player.position))
+        .filter((value) => value && !hiddenPositions.has(String(value).toLowerCase())),
     ]),
   ];
 

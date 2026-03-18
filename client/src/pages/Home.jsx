@@ -11,9 +11,9 @@ export default function Home() {
 
   const leaders = [
     { role: "Coach", name: "To Be Announced" },
-    { role: "Men Captain", name: "To Be Announced" },
-    { role: "Ladies Captain", name: "To Be Announced" },
-    { role: "Men Vice Captain", name: "To Be Announced" },
+    { role: "Captain — Men Team", name: "To Be Announced" },
+    { role: "Captain — Women Team", name: "To Be Announced" },
+    { role: "Vice Captain — Men Team", name: "To Be Announced" },
     { role: "Treasurer", name: "To Be Announced" },
     { role: "Social Media Manager", name: "To Be Announced" },
   ];
@@ -78,6 +78,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Team Leadership */}
+      <section className="max-w-7xl mx-auto px-6 py-14">
+        <div className="glass-card glow-border p-7 md:p-10">
+          <div className="text-center mb-8">
+            <p className="text-gold text-xs md:text-sm uppercase tracking-[0.35em] mb-3">Front Office</p>
+            <h2 className="font-display text-4xl md:text-6xl text-white tracking-wider font-bold">
+              TEAM LEADERSHIP BOARD
+            </h2>
+            <p className="text-white/70 mt-3 text-sm md:text-base">
+              Coach, Captains, Vice Captain, Treasurer and Social Media Manager
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {leaders.map((leader) => (
+              <div
+                key={leader.role}
+                className="rounded-xl border border-glow/40 bg-glow/10 p-6 text-center shadow-glow"
+              >
+                <p className="text-white text-xs uppercase tracking-[0.22em] mb-2 font-semibold">{leader.role}</p>
+                <p className="font-display text-2xl md:text-3xl text-gold tracking-wider font-bold">
+                  {leader.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Stats Bar */}
       <section className="border-y border-white/10 py-8 bg-navy/50">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -90,24 +118,6 @@ export default function Home() {
             <div key={stat.label}>
               <p className="font-display text-4xl gradient-text">{stat.value}</p>
               <p className="text-white/50 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Team Leadership */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="section-title gradient-text">Team Leadership</h2>
-          <span className="text-glow text-xs uppercase tracking-widest">Official Roles</span>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {leaders.map((leader) => (
-            <div key={leader.role} className="glass-card glow-border p-6 hover:shadow-glow transition-all duration-300">
-              <p className="text-white/60 text-xs uppercase tracking-[0.2em] mb-2">{leader.role}</p>
-              <p className="font-display text-2xl gradient-text tracking-wider font-bold">
-                {leader.name}
-              </p>
             </div>
           ))}
         </div>

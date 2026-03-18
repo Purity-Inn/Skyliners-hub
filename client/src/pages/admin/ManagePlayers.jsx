@@ -20,9 +20,7 @@ export default function ManagePlayers() {
     "Left Wing",
     "Right Wing",
     "Center",
-    "Defender",
     "Keeper",
-    "Pivot",
   ];
 
   const normalizePosition = (positionValue) => {
@@ -132,7 +130,7 @@ export default function ManagePlayers() {
                 required
                 list="player-position-options"
                 className="input-dark"
-                placeholder="e.g. Left Wing, Right Wing, Center"
+                placeholder="e.g. Left Wing, Right Wing, Center, Keeper"
               />
               <datalist id="player-position-options">
                 {suggestedPositions.map((positionName) => (
