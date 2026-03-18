@@ -16,6 +16,13 @@ export default function ManagePlayers() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const normalizePosition = (positionValue) => {
+    if (!positionValue) return "";
+    return String(positionValue).trim().toLowerCase() === "zero"
+      ? "Left Wing"
+      : positionValue;
+  };
+
   const load = () => getPlayers().then((r) => setPlayers(r.data)).catch(() => {});
   useEffect(() => { load(); }, []);
 
@@ -109,7 +116,7 @@ export default function ManagePlayers() {
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Position *</label>
-              <input name="position" value={form.position} onChange={handleChange} required className="input-dark" placeholder="e.g. Defender, Center, Keeper" />
+              <input name="position" value={form.position} onChange={handleChange} required className="input-dark" placeholder="e.g. Left Wing, Right Wing, Center" />
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Gender *</label>
@@ -179,7 +186,7 @@ export default function ManagePlayers() {
                     )}
                     <div>
                       <p className="font-semibold text-white">{player.name}</p>
-                      <p className="text-white/40 text-xs uppercase tracking-wider">{player.position}</p>
+                      <p className="text-white/40 text-xs uppercase tracking-wider">{normalizePosition(player.position)}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -213,7 +220,7 @@ export default function ManagePlayers() {
                     )}
                     <div>
                       <p className="font-semibold text-white">{player.name}</p>
-                      <p className="text-pink-400/60 text-xs uppercase tracking-wider">{player.position}</p>
+                      <p className="text-pink-400/60 text-xs uppercase tracking-wider">{normalizePosition(player.position)}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">

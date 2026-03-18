@@ -13,6 +13,33 @@ const matchSchema = new mongoose.Schema({
     opponentScore: { type: Number, default: null },
     outcome: { type: String, enum: ["win", "loss", "draw", null], default: null },
   },
+  scoreSheet: {
+    period1: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    period2: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    period3: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    period4: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    overtime: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    penalties: {
+      teamA: { type: Number, default: 0 },
+      teamB: { type: Number, default: 0 },
+    },
+    notes: { type: String, default: "" },
+  },
   notes: { type: String, default: "" },
 }, { timestamps: true });
 

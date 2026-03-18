@@ -18,4 +18,13 @@ const playerSchema = new mongoose.Schema({
   isActive:     { type: Boolean, default: true },
 }, { timestamps: true });
 
+playerSchema.pre("validate", function normalizePosition() {
+  if (!this.position) return;
+
+  const normalized = String(this.position).trim();
+  if (normalized.toLowerCase() === "zero") {
+    this.position = "Left Wing";
+  }
+});
+
 module.exports = mongoose.model("Player", playerSchema);

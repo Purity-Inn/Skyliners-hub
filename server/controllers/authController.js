@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { cloudinary } = require("../config/cloudinary");
+const { notifyMembers } = require("../services/notificationService");
 
 const getTokenExpiry = () => {
   const rawValue = process.env.JWT_EXPIRES_IN;
@@ -38,6 +39,13 @@ const register = async (req, res) => {
     const userCount = await User.countDocuments();
     const role = userCount === 0 ? "admin" : "visitor";
     const user = await User.create({ name, email, password, role });
+
+    await notifyMembers({
+      subject: "New user joined Skyliners Hub",
+      text: `${user.name} just joined as a ${user.role}.`,
+      html: `<p><strong>${user.name}</strong> just joined Skyliners Hub as a <strong>${user.role}</strong>.</p>`,
+    });
+
     res.status(201).json({
       _id: user._id, name: user.name, email: user.email,
       role: user.role, profilePhoto: user.profilePhoto,

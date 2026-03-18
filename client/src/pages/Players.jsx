@@ -16,16 +16,23 @@ export default function Players() {
       .finally(() => setLoading(false));
   }, []);
 
+  const normalizePosition = (positionValue) => {
+    if (!positionValue) return "";
+    return String(positionValue).trim().toLowerCase() === "zero"
+      ? "Left Wing"
+      : positionValue;
+  };
+
   const filtered = players.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchPosition = position === "All" || p.position === position;
+    const matchPosition = position === "All" || normalizePosition(p.position) === position;
     const matchTeam = team === "All" || p.gender === team;
     return matchSearch && matchPosition && matchTeam;
   });
 
   const positions = [
     "All",
-    ...new Set(players.map((player) => player.position).filter(Boolean)),
+    ...new Set(players.map((player) => normalizePosition(player.position)).filter(Boolean)),
   ];
 
   const menPlayers = filtered.filter((p) => p.gender === "Male");
@@ -58,7 +65,7 @@ export default function Players() {
       <div className="p-4">
         <h3 className="font-semibold text-white group-hover:text-glow transition-colors">{player.name}</h3>
         <p className="text-xs mt-1 uppercase tracking-wider" style={{ color: color === "pink" ? "#f472b6" : "rgba(249,115,22,0.7)" }}>
-          {player.position}
+          {normalizePosition(player.position)}
         </p>
         {player.yearJoined && <p className="text-white/30 text-xs mt-1">Since {player.yearJoined}</p>}
       </div>

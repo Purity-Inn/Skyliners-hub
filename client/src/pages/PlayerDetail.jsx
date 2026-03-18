@@ -6,6 +6,12 @@ export default function PlayerDetail() {
   const { id } = useParams();
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
+  const normalizePosition = (positionValue) => {
+    if (!positionValue) return "";
+    return String(positionValue).trim().toLowerCase() === "zero"
+      ? "Left Wing"
+      : positionValue;
+  };
 
   useEffect(() => {
     getPlayer(id)
@@ -42,7 +48,7 @@ export default function PlayerDetail() {
 
             {/* Info */}
             <div className="p-8 flex-1">
-              <p className="text-glow uppercase tracking-widest text-xs mb-1">{player.position}</p>
+              <p className="text-glow uppercase tracking-widest text-xs mb-1">{normalizePosition(player.position)}</p>
               <h1 className="font-display text-5xl gradient-text tracking-wider mb-4">{player.name.toUpperCase()}</h1>
 
               <div className="grid grid-cols-2 gap-4 mb-6">

@@ -7,6 +7,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { loginUser } = useAuth();
   const navigate = useNavigate();
 
@@ -139,7 +140,7 @@ export default function Login() {
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={form.password}
                 onChange={handleChange}
@@ -147,6 +148,15 @@ export default function Login() {
                 className="input-dark"
                 placeholder="••••••••"
               />
+              <label className="flex items-center gap-2 mt-2 text-xs text-white/50 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={(event) => setShowPassword(event.target.checked)}
+                  className="accent-orange-500"
+                />
+                Show password
+              </label>
             </div>
             <button type="submit" disabled={loading} className="glow-btn w-full py-3 text-base">
               {loading ? "Signing in..." : "Sign In →"}

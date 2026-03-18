@@ -66,6 +66,22 @@ export default function Matches() {
                   {match.notes && (
                     <p className="text-white/30 text-sm mt-2 italic">{match.notes}</p>
                   )}
+                  {match.status === "completed" && match.scoreSheet && (
+                    <div className="mt-3 text-xs text-white/50 space-y-1">
+                      <p>
+                        Score Sheet: P1 {match.scoreSheet.period1?.teamA ?? 0}-{match.scoreSheet.period1?.teamB ?? 0},
+                        P2 {match.scoreSheet.period2?.teamA ?? 0}-{match.scoreSheet.period2?.teamB ?? 0},
+                        P3 {match.scoreSheet.period3?.teamA ?? 0}-{match.scoreSheet.period3?.teamB ?? 0},
+                        P4 {match.scoreSheet.period4?.teamA ?? 0}-{match.scoreSheet.period4?.teamB ?? 0}
+                      </p>
+                      {(match.scoreSheet.overtime?.teamA || match.scoreSheet.overtime?.teamB) ? (
+                        <p>Overtime: {match.scoreSheet.overtime?.teamA ?? 0}-{match.scoreSheet.overtime?.teamB ?? 0}</p>
+                      ) : null}
+                      {(match.scoreSheet.penalties?.teamA || match.scoreSheet.penalties?.teamB) ? (
+                        <p>Penalties: {match.scoreSheet.penalties?.teamA ?? 0}-{match.scoreSheet.penalties?.teamB ?? 0}</p>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4">

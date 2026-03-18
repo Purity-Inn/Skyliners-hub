@@ -1,5 +1,6 @@
 const GalleryPhoto = require("../models/GalleryPhoto");
 const { cloudinary } = require("../config/cloudinary");
+const { notifyMembers } = require("../services/notificationService");
 
 const getPhotos = async (req, res) => {
   try {
@@ -32,6 +33,17 @@ const uploadPhoto = async (req, res) => {
       uploadedBy: req.user._id,
       isApproved: req.user.role === "admin",
     });
+
+    await notifyMembers({
+      subject: req.user.role === "admin" ? "New gallery photo uploaded" : "New gallery photo submitted",
+      text: req.user.role === "admin"
+        ? "A new gallery photo has been uploaded and published."
+        : "A new gallery photo has been submitted and is awaiting approval.",
+      html: req.user.role === "admin"
+        ? "<p>A new gallery photo has been uploaded and published.</p>"
+        : "<p>A new gallery photo has been submitted and is awaiting approval.</p>",
+    });
+
     res.status(201).json(photo);
   } catch (err) { res.status(500).json({ message: err.message }); }
 };
@@ -42,6 +54,13 @@ const approvePhoto = async (req, res) => {
       req.params.id, { isApproved: true }, { new: true }
     );
     if (!photo) return res.status(404).json({ message: "Photo not found" });
+
+    await notifyMembers({
+      subject: "Gallery photo approved",
+      text: "A gallery photo has been approved and is now visible to everyone.",
+      html: "<p>A gallery photo has been approved and is now visible to everyone.</p>",
+    });
+
     res.json(photo);
   } catch (err) { res.status(500).json({ message: err.message }); }
 };

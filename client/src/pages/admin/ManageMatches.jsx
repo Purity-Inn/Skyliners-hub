@@ -5,6 +5,13 @@ const emptyForm = {
   teamA: "Skyliners", teamB: "", opponent: "", date: "", venue: "",
   competition: "Friendly", status: "upcoming",
   skylinerScore: "", opponentScore: "", outcome: "", notes: "",
+  p1TeamA: "0", p1TeamB: "0",
+  p2TeamA: "0", p2TeamB: "0",
+  p3TeamA: "0", p3TeamB: "0",
+  p4TeamA: "0", p4TeamB: "0",
+  otTeamA: "0", otTeamB: "0",
+  penTeamA: "0", penTeamB: "0",
+  scoreSheetNotes: "",
 };
 
 export default function ManageMatches() {
@@ -37,6 +44,15 @@ export default function ManageMatches() {
           opponentScore: Number(form.opponentScore),
           outcome: form.outcome,
         } : undefined,
+        scoreSheet: {
+          period1: { teamA: Number(form.p1TeamA || 0), teamB: Number(form.p1TeamB || 0) },
+          period2: { teamA: Number(form.p2TeamA || 0), teamB: Number(form.p2TeamB || 0) },
+          period3: { teamA: Number(form.p3TeamA || 0), teamB: Number(form.p3TeamB || 0) },
+          period4: { teamA: Number(form.p4TeamA || 0), teamB: Number(form.p4TeamB || 0) },
+          overtime: { teamA: Number(form.otTeamA || 0), teamB: Number(form.otTeamB || 0) },
+          penalties: { teamA: Number(form.penTeamA || 0), teamB: Number(form.penTeamB || 0) },
+          notes: form.scoreSheetNotes || "",
+        },
       };
       if (editing) {
         await updateMatch(editing, data);
@@ -70,6 +86,19 @@ export default function ManageMatches() {
       opponentScore: match.result?.opponentScore ?? "",
       outcome: match.result?.outcome || "",
       notes: match.notes || "",
+      p1TeamA: String(match.scoreSheet?.period1?.teamA ?? 0),
+      p1TeamB: String(match.scoreSheet?.period1?.teamB ?? 0),
+      p2TeamA: String(match.scoreSheet?.period2?.teamA ?? 0),
+      p2TeamB: String(match.scoreSheet?.period2?.teamB ?? 0),
+      p3TeamA: String(match.scoreSheet?.period3?.teamA ?? 0),
+      p3TeamB: String(match.scoreSheet?.period3?.teamB ?? 0),
+      p4TeamA: String(match.scoreSheet?.period4?.teamA ?? 0),
+      p4TeamB: String(match.scoreSheet?.period4?.teamB ?? 0),
+      otTeamA: String(match.scoreSheet?.overtime?.teamA ?? 0),
+      otTeamB: String(match.scoreSheet?.overtime?.teamB ?? 0),
+      penTeamA: String(match.scoreSheet?.penalties?.teamA ?? 0),
+      penTeamB: String(match.scoreSheet?.penalties?.teamB ?? 0),
+      scoreSheetNotes: match.scoreSheet?.notes || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -152,6 +181,33 @@ export default function ManageMatches() {
                     <option value="loss">Loss</option>
                     <option value="draw">Draw</option>
                   </select>
+                </div>
+
+                <div className="md:col-span-2 mt-2">
+                  <h3 className="text-white/70 text-xs uppercase tracking-wider mb-3">Rollball Score Sheet</h3>
+                  <div className="grid grid-cols-3 gap-2 text-xs text-white/50 mb-2">
+                    <span>Period</span>
+                    <span>{form.teamA || "Team A"}</span>
+                    <span>{form.teamB || "Team B"}</span>
+                  </div>
+                  {[
+                    ["P1", "p1TeamA", "p1TeamB"],
+                    ["P2", "p2TeamA", "p2TeamB"],
+                    ["P3", "p3TeamA", "p3TeamB"],
+                    ["P4", "p4TeamA", "p4TeamB"],
+                    ["OT", "otTeamA", "otTeamB"],
+                    ["Pen", "penTeamA", "penTeamB"],
+                  ].map(([label, aKey, bKey]) => (
+                    <div key={label} className="grid grid-cols-3 gap-2 mb-2">
+                      <div className="input-dark flex items-center justify-center text-white/60">{label}</div>
+                      <input name={aKey} value={form[aKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                      <input name={bKey} value={form[bKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                    </div>
+                  ))}
+                  <div className="mt-2">
+                    <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Score Sheet Notes</label>
+                    <textarea name="scoreSheetNotes" value={form.scoreSheetNotes} onChange={handleChange} className="input-dark h-20 resize-none" placeholder="Scorers, key moments, officials, etc." />
+                  </div>
                 </div>
               </>
             )}
