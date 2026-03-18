@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAnnouncements } from "../services/announcementService";
+import { getLeadership } from "../services/leadershipService";
 import { getMatches } from "../services/matchService";
 import { getUpcomingBirthdays } from "../services/playerService";
 
@@ -8,17 +9,33 @@ export default function Home() {
   const [announcements, setAnnouncements] = useState([]);
   const [matches, setMatches] = useState([]);
   const [birthdays, setBirthdays] = useState([]);
+  const [leadership, setLeadership] = useState({
+    coach: "To Be Announced",
+    menCaptain: "To Be Announced",
+    womenCaptain: "To Be Announced",
+    menViceCaptain: "To Be Announced",
+    treasurer: "To Be Announced",
+    socialMediaManager: "To Be Announced",
+  });
 
   const leaders = [
-    { role: "Coach", name: "To Be Announced" },
-    { role: "Captain — Men Team", name: "To Be Announced" },
-    { role: "Captain — Women Team", name: "To Be Announced" },
-    { role: "Vice Captain — Men Team", name: "To Be Announced" },
-    { role: "Treasurer", name: "To Be Announced" },
-    { role: "Social Media Manager", name: "To Be Announced" },
+    { role: "Coach", name: leadership.coach },
+    { role: "Captain — Men Team", name: leadership.menCaptain },
+    { role: "Captain — Women Team", name: leadership.womenCaptain },
+    { role: "Vice Captain — Men Team", name: leadership.menViceCaptain },
+    { role: "Treasurer", name: leadership.treasurer },
+    { role: "Social Media Manager", name: leadership.socialMediaManager },
   ];
 
   useEffect(() => {
+    getLeadership().then((r) => setLeadership({
+      coach: r.data.coach || "To Be Announced",
+      menCaptain: r.data.menCaptain || "To Be Announced",
+      womenCaptain: r.data.womenCaptain || "To Be Announced",
+      menViceCaptain: r.data.menViceCaptain || "To Be Announced",
+      treasurer: r.data.treasurer || "To Be Announced",
+      socialMediaManager: r.data.socialMediaManager || "To Be Announced",
+    })).catch(() => {});
     getAnnouncements().then((r) => setAnnouncements(r.data.slice(0, 3))).catch(() => {});
     getMatches("upcoming").then((r) => setMatches(r.data.slice(0, 3))).catch(() => {});
     getUpcomingBirthdays().then((r) => setBirthdays(r.data)).catch(() => {});

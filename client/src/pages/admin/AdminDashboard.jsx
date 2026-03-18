@@ -29,6 +29,7 @@ export default function AdminDashboard() {
     { label: "Players", value: stats.players, icon: "👟", link: "/admin/players" },
     { label: "Matches", value: stats.matches, icon: "🏆", link: "/admin/matches" },
     { label: "Users", value: stats.users, icon: "👥", link: "/admin/users" },
+    { label: "Leadership", value: "6", icon: "👑", link: "/admin/leadership" },
     { label: "Announcements", value: stats.announcements, icon: "📢", link: "/admin/announcements" },
     { label: "Hall of Fame", value: stats.hof, icon: "⭐", link: "/admin/hof" },
     { label: "Gallery Photos", value: stats.photos, icon: "🖼️", link: "/admin/gallery" },
@@ -44,7 +45,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-12">
           {cards.map((card) => (
             <Link key={card.label} to={card.link}
               className="glass-card glow-border p-6 hover:shadow-glow transition-all duration-300 group">
@@ -64,6 +65,7 @@ export default function AdminDashboard() {
             {[
               { label: "👟 Manage Players", link: "/admin/players" },
               { label: "🏆 Manage Matches", link: "/admin/matches" },
+              { label: "👑 Leadership Board", link: "/admin/leadership" },
               { label: "📢 Announcements", link: "/admin/announcements" },
               { label: "👥 Manage Users", link: "/admin/users" },
               { label: "⭐ Hall of Fame", link: "/admin/hof" },

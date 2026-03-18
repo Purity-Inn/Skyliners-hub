@@ -17,6 +17,7 @@ import ManageUsers from "./pages/admin/ManageUsers";
 import ManageAnnouncements from "./pages/admin/ManageAnnouncements";
 import ManageHof from "./pages/admin/ManageHof";
 import ManageGallery from "./pages/admin/ManageGallery";
+import ManageLeadership from "./pages/admin/ManageLeadership";
 import Navbar from "./components/Navbar";
 
 const PrivateRoute = ({ children }) => {
@@ -51,6 +52,7 @@ function App() {
         <Route path="/admin/announcements" element={<AdminRoute><ManageAnnouncements /></AdminRoute>} />
         <Route path="/admin/hof" element={<AdminRoute><ManageHof /></AdminRoute>} />
         <Route path="/admin/gallery" element={<AdminRoute><ManageGallery /></AdminRoute>} />
+        <Route path="/admin/leadership" element={<AdminRoute><ManageLeadership /></AdminRoute>} />
       </Routes>
     </div>
   );

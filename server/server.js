@@ -52,6 +52,7 @@ const hofRoutes = require("./routes/hofRoutes");
 const announcementRoutes = require("./routes/announcementRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const leadershipRoutes = require("./routes/leadershipRoutes");
 
 console.log("[server] Route types:", {
   authRoutes: typeof authRoutes,
@@ -62,6 +63,7 @@ console.log("[server] Route types:", {
   announcementRoutes: typeof announcementRoutes,
   uploadRoutes: typeof uploadRoutes,
   notificationRoutes: typeof notificationRoutes,
+  leadershipRoutes: typeof leadershipRoutes,
 });
 
 app.use("/api/auth", authRoutes);
@@ -72,6 +74,7 @@ app.use("/api/hof", hofRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/leadership", leadershipRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "🏆 Skyliners Hub backend is live" });
