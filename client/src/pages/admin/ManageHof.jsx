@@ -6,6 +6,8 @@ const emptyForm = { name: "", photo: "", position: "", yearsActive: "", achievem
 export default function ManageHof() {
   const [legends, setLegends] = useState([]);
   const [form, setForm] = useState(emptyForm);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [preview, setPreview] = useState("");
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -15,24 +17,40 @@ export default function ManageHof() {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handlePhoto = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setPhotoFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = {
-        ...form,
-        achievements: form.achievements
-          ? form.achievements.split(",").map((a) => a.trim()).filter(Boolean)
-          : [],
-      };
+      const payload = new FormData();
+      payload.append("name", form.name || "");
+      payload.append("position", form.position || "");
+      payload.append("yearsActive", form.yearsActive || "");
+      payload.append("tribute", form.tribute || "");
+      payload.append("achievements", form.achievements || "");
+
+      if (photoFile) {
+        payload.append("photo", photoFile);
+      } else if (form.photo) {
+        payload.append("photo", form.photo);
+      }
+
       if (editing) {
-        await updateHof(editing, data);
+        await updateHof(editing, payload);
         setMessage("✅ Legend updated!");
       } else {
-        await createHof(data);
+        await createHof(payload);
         setMessage("✅ Legend added!");
       }
       setForm(emptyForm);
+      setPhotoFile(null);
+      setPreview("");
       setEditing(null);
       load();
     } catch (err) {
@@ -53,6 +71,8 @@ export default function ManageHof() {
       achievements: legend.achievements?.join(", ") || "",
       tribute: legend.tribute || "",
     });
+    setPhotoFile(null);
+    setPreview(legend.photo || "");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -94,8 +114,16 @@ export default function ManageHof() {
               <input name="yearsActive" value={form.yearsActive} onChange={handleChange} className="input-dark" placeholder="e.g. 2018 - 2022" />
             </div>
             <div>
-              <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Photo URL</label>
-              <input name="photo" value={form.photo} onChange={handleChange} className="input-dark" placeholder="https://..." />
+              <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Profile Photo</label>
+              <div className="flex items-center gap-4">
+                {preview && <img src={preview} alt="legend preview" className="w-16 h-16 rounded-full object-cover border-2 border-gold/40" />}
+                <label className="cursor-pointer glow-btn text-sm px-4 py-2">
+                  {preview ? "Change Photo" : "Upload Photo"}
+                  <input type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
+                </label>
+              </div>
+              <p className="text-white/30 text-xs mt-2">You can also paste an image URL below (optional)</p>
+              <input name="photo" value={form.photo} onChange={handleChange} className="input-dark mt-2" placeholder="https://..." />
             </div>
             <div className="md:col-span-2">
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Achievements (comma separated)</label>
@@ -110,7 +138,7 @@ export default function ManageHof() {
                 {loading ? "Saving..." : editing ? "Update Legend" : "Add to Hall of Fame"}
               </button>
               {editing && (
-                <button type="button" onClick={() => { setEditing(null); setForm(emptyForm); }}
+                <button type="button" onClick={() => { setEditing(null); setForm(emptyForm); setPhotoFile(null); setPreview(""); }}
                   className="border border-white/20 text-white/60 px-8 py-3 rounded-lg hover:border-white/40 transition-all">
                   Cancel
                 </button>

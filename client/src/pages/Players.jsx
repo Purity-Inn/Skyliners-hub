@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getLeadership } from "../services/leadershipService";
 import { getPlayers } from "../services/playerService";
 
 export default function Players() {
@@ -8,6 +9,20 @@ export default function Players() {
   const [search, setSearch] = useState("");
   const [position, setPosition] = useState("All");
   const [team, setTeam] = useState("All");
+  const [leadership, setLeadership] = useState({
+    coach: "To Be Announced",
+    coachPlayer: null,
+    menCaptain: "To Be Announced",
+    menCaptainPlayer: null,
+    womenCaptain: "To Be Announced",
+    womenCaptainPlayer: null,
+    menViceCaptain: "To Be Announced",
+    menViceCaptainPlayer: null,
+    treasurer: "To Be Announced",
+    treasurerPlayer: null,
+    socialMediaManager: "To Be Announced",
+    socialMediaManagerPlayer: null,
+  });
 
   const suggestedPositions = [
     "Left Wing",
@@ -23,7 +38,35 @@ export default function Players() {
       .then((r) => setPlayers(r.data))
       .catch(() => {})
       .finally(() => setLoading(false));
+
+    getLeadership()
+      .then((response) => {
+        setLeadership({
+          coach: response.data.coach || "To Be Announced",
+          coachPlayer: response.data.coachPlayer || null,
+          menCaptain: response.data.menCaptain || "To Be Announced",
+          menCaptainPlayer: response.data.menCaptainPlayer || null,
+          womenCaptain: response.data.womenCaptain || "To Be Announced",
+          womenCaptainPlayer: response.data.womenCaptainPlayer || null,
+          menViceCaptain: response.data.menViceCaptain || "To Be Announced",
+          menViceCaptainPlayer: response.data.menViceCaptainPlayer || null,
+          treasurer: response.data.treasurer || "To Be Announced",
+          treasurerPlayer: response.data.treasurerPlayer || null,
+          socialMediaManager: response.data.socialMediaManager || "To Be Announced",
+          socialMediaManagerPlayer: response.data.socialMediaManagerPlayer || null,
+        });
+      })
+      .catch(() => {});
   }, []);
+
+  const leaders = [
+    { role: "Coach", name: leadership.coach, player: leadership.coachPlayer },
+    { role: "Captain — Men Team", name: leadership.menCaptain, player: leadership.menCaptainPlayer },
+    { role: "Captain — Women Team", name: leadership.womenCaptain, player: leadership.womenCaptainPlayer },
+    { role: "Vice Captain — Men Team", name: leadership.menViceCaptain, player: leadership.menViceCaptainPlayer },
+    { role: "Treasurer", name: leadership.treasurer, player: leadership.treasurerPlayer },
+    { role: "Social Media Manager", name: leadership.socialMediaManager, player: leadership.socialMediaManagerPlayer },
+  ];
 
   const normalizePosition = (positionValue) => {
     if (!positionValue) return "";
@@ -143,6 +186,45 @@ export default function Players() {
             </button>
           ))}
         </div>
+
+        {/* Leadership Board */}
+        <section className="mb-14">
+          <div className="glass-card glow-border p-7 md:p-10">
+            <div className="text-center mb-8">
+              <p className="text-gold text-xs md:text-sm uppercase tracking-[0.35em] mb-3">Front Office</p>
+              <h2 className="font-display text-4xl md:text-6xl text-white tracking-wider font-black uppercase">
+                THE LEADERSHIP BOARD
+              </h2>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {leaders.map((leader) => (
+                <Link
+                  key={leader.role}
+                  to={leader.player?._id ? `/players/${leader.player._id}` : "#"}
+                  className={`rounded-xl border border-glow/40 bg-glow/10 p-6 text-center shadow-glow transition-all duration-300 ${leader.player?._id ? "hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.35)]" : "cursor-default"}`}
+                  onClick={(event) => {
+                    if (!leader.player?._id) event.preventDefault();
+                  }}
+                >
+                  <p className="text-white text-xs uppercase tracking-[0.22em] mb-3 font-semibold">{leader.role}</p>
+                  <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-glow/40 bg-navy/60 flex items-center justify-center mb-4">
+                    {leader.player?.photo ? (
+                      <img src={leader.player.photo} alt={leader.player.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="font-display text-3xl text-gold/80">{(leader.player?.name || leader.name || "T").charAt(0)}</span>
+                    )}
+                  </div>
+                  <p className="font-display text-xl md:text-2xl text-gold tracking-wider font-bold">
+                    {leader.player?.name || leader.name}
+                  </p>
+                  {leader.player?.position ? (
+                    <p className="text-white/60 text-xs uppercase tracking-wider mt-2">{leader.player.position}</p>
+                  ) : null}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {loading ? (
           <div className="text-center text-white/40 py-20">Loading players...</div>
