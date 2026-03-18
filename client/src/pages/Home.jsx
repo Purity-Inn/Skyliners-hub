@@ -100,8 +100,8 @@ export default function Home() {
         <div className="glass-card glow-border p-7 md:p-10">
           <div className="text-center mb-8">
             <p className="text-gold text-xs md:text-sm uppercase tracking-[0.35em] mb-3">Front Office</p>
-            <h2 className="font-display text-4xl md:text-6xl text-white tracking-wider font-bold">
-              TEAM LEADERSHIP BOARD
+            <h2 className="font-display text-5xl md:text-7xl text-white tracking-wider font-black uppercase">
+              THE LEADERSHIP BOARD
             </h2>
             <p className="text-white/70 mt-3 text-sm md:text-base">
               Coach, Captains, Vice Captain, Treasurer and Social Media Manager
