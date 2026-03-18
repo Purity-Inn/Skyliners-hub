@@ -11,30 +11,42 @@ export default function Home() {
   const [birthdays, setBirthdays] = useState([]);
   const [leadership, setLeadership] = useState({
     coach: "To Be Announced",
+    coachPlayer: null,
     menCaptain: "To Be Announced",
+    menCaptainPlayer: null,
     womenCaptain: "To Be Announced",
+    womenCaptainPlayer: null,
     menViceCaptain: "To Be Announced",
+    menViceCaptainPlayer: null,
     treasurer: "To Be Announced",
+    treasurerPlayer: null,
     socialMediaManager: "To Be Announced",
+    socialMediaManagerPlayer: null,
   });
 
   const leaders = [
-    { role: "Coach", name: leadership.coach },
-    { role: "Captain — Men Team", name: leadership.menCaptain },
-    { role: "Captain — Women Team", name: leadership.womenCaptain },
-    { role: "Vice Captain — Men Team", name: leadership.menViceCaptain },
-    { role: "Treasurer", name: leadership.treasurer },
-    { role: "Social Media Manager", name: leadership.socialMediaManager },
+    { role: "Coach", name: leadership.coach, player: leadership.coachPlayer },
+    { role: "Captain — Men Team", name: leadership.menCaptain, player: leadership.menCaptainPlayer },
+    { role: "Captain — Women Team", name: leadership.womenCaptain, player: leadership.womenCaptainPlayer },
+    { role: "Vice Captain — Men Team", name: leadership.menViceCaptain, player: leadership.menViceCaptainPlayer },
+    { role: "Treasurer", name: leadership.treasurer, player: leadership.treasurerPlayer },
+    { role: "Social Media Manager", name: leadership.socialMediaManager, player: leadership.socialMediaManagerPlayer },
   ];
 
   useEffect(() => {
     getLeadership().then((r) => setLeadership({
       coach: r.data.coach || "To Be Announced",
+      coachPlayer: r.data.coachPlayer || null,
       menCaptain: r.data.menCaptain || "To Be Announced",
+      menCaptainPlayer: r.data.menCaptainPlayer || null,
       womenCaptain: r.data.womenCaptain || "To Be Announced",
+      womenCaptainPlayer: r.data.womenCaptainPlayer || null,
       menViceCaptain: r.data.menViceCaptain || "To Be Announced",
+      menViceCaptainPlayer: r.data.menViceCaptainPlayer || null,
       treasurer: r.data.treasurer || "To Be Announced",
+      treasurerPlayer: r.data.treasurerPlayer || null,
       socialMediaManager: r.data.socialMediaManager || "To Be Announced",
+      socialMediaManagerPlayer: r.data.socialMediaManagerPlayer || null,
     })).catch(() => {});
     getAnnouncements().then((r) => setAnnouncements(r.data.slice(0, 3))).catch(() => {});
     getMatches("upcoming").then((r) => setMatches(r.data.slice(0, 3))).catch(() => {});
@@ -109,15 +121,31 @@ export default function Home() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {leaders.map((leader) => (
-              <div
+              <Link
                 key={leader.role}
-                className="rounded-xl border border-glow/40 bg-glow/10 p-6 text-center shadow-glow"
+                to={leader.player?._id ? `/players/${leader.player._id}` : "#"}
+                className={`rounded-xl border border-glow/40 bg-glow/10 p-6 text-center shadow-glow transition-all duration-300 ${leader.player?._id ? "hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.35)]" : "cursor-default"}`}
+                onClick={(event) => {
+                  if (!leader.player?._id) event.preventDefault();
+                }}
               >
-                <p className="text-white text-xs uppercase tracking-[0.22em] mb-2 font-semibold">{leader.role}</p>
+                <p className="text-white text-xs uppercase tracking-[0.22em] mb-3 font-semibold">{leader.role}</p>
+                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-glow/40 bg-navy/60 flex items-center justify-center mb-4">
+                  {leader.player?.photo ? (
+                    <img src={leader.player.photo} alt={leader.player.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="font-display text-3xl text-gold/80">{(leader.player?.name || leader.name || "T").charAt(0)}</span>
+                  )}
+                </div>
                 <p className="font-display text-2xl md:text-3xl text-gold tracking-wider font-bold">
-                  {leader.name}
+                  {leader.player?.name || leader.name}
                 </p>
-              </div>
+                {leader.player?.position ? (
+                  <p className="text-white/60 text-xs uppercase tracking-wider mt-2">
+                    {leader.player.position}
+                  </p>
+                ) : null}
+              </Link>
             ))}
           </div>
         </div>
