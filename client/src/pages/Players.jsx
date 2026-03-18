@@ -9,6 +9,15 @@ export default function Players() {
   const [position, setPosition] = useState("All");
   const [team, setTeam] = useState("All");
 
+  const suggestedPositions = [
+    "Left Wing",
+    "Right Wing",
+    "Center",
+    "Defender",
+    "Keeper",
+    "Pivot",
+  ];
+
   useEffect(() => {
     getPlayers()
       .then((r) => setPlayers(r.data))
@@ -32,7 +41,10 @@ export default function Players() {
 
   const positions = [
     "All",
-    ...new Set(players.map((player) => normalizePosition(player.position)).filter(Boolean)),
+    ...new Set([
+      ...suggestedPositions,
+      ...players.map((player) => normalizePosition(player.position)).filter(Boolean),
+    ]),
   ];
 
   const menPlayers = filtered.filter((p) => p.gender === "Male");

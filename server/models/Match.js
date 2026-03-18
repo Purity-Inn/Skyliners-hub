@@ -17,26 +17,38 @@ const matchSchema = new mongoose.Schema({
     period1: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     period2: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     period3: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     period4: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     overtime: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     penalties: {
       teamA: { type: Number, default: 0 },
       teamB: { type: Number, default: 0 },
+      teamAPoints: { type: Number, default: 0 },
+      teamBPoints: { type: Number, default: 0 },
     },
     notes: { type: String, default: "" },
   },

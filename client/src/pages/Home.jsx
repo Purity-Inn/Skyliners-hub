@@ -9,6 +9,15 @@ export default function Home() {
   const [matches, setMatches] = useState([]);
   const [birthdays, setBirthdays] = useState([]);
 
+  const leaders = [
+    { role: "Coach", name: "To Be Announced" },
+    { role: "Men Captain", name: "To Be Announced" },
+    { role: "Ladies Captain", name: "To Be Announced" },
+    { role: "Men Vice Captain", name: "To Be Announced" },
+    { role: "Treasurer", name: "To Be Announced" },
+    { role: "Social Media Manager", name: "To Be Announced" },
+  ];
+
   useEffect(() => {
     getAnnouncements().then((r) => setAnnouncements(r.data.slice(0, 3))).catch(() => {});
     getMatches("upcoming").then((r) => setMatches(r.data.slice(0, 3))).catch(() => {});
@@ -81,6 +90,24 @@ export default function Home() {
             <div key={stat.label}>
               <p className="font-display text-4xl gradient-text">{stat.value}</p>
               <p className="text-white/50 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Team Leadership */}
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="section-title gradient-text">Team Leadership</h2>
+          <span className="text-glow text-xs uppercase tracking-widest">Official Roles</span>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {leaders.map((leader) => (
+            <div key={leader.role} className="glass-card glow-border p-6 hover:shadow-glow transition-all duration-300">
+              <p className="text-white/60 text-xs uppercase tracking-[0.2em] mb-2">{leader.role}</p>
+              <p className="font-display text-2xl gradient-text tracking-wider font-bold">
+                {leader.name}
+              </p>
             </div>
           ))}
         </div>

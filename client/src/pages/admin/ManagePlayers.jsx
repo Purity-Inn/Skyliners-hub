@@ -16,6 +16,15 @@ export default function ManagePlayers() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const suggestedPositions = [
+    "Left Wing",
+    "Right Wing",
+    "Center",
+    "Defender",
+    "Keeper",
+    "Pivot",
+  ];
+
   const normalizePosition = (positionValue) => {
     if (!positionValue) return "";
     return String(positionValue).trim().toLowerCase() === "zero"
@@ -65,7 +74,7 @@ export default function ManagePlayers() {
     setForm({
       name: player.name,
       jerseyNumber: player.jerseyNumber,
-      position: player.position,
+      position: normalizePosition(player.position),
       gender: player.gender || "Male",
       bio: player.bio || "",
       dateOfBirth: player.dateOfBirth ? player.dateOfBirth.split("T")[0] : "",
@@ -116,7 +125,20 @@ export default function ManagePlayers() {
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Position *</label>
-              <input name="position" value={form.position} onChange={handleChange} required className="input-dark" placeholder="e.g. Left Wing, Right Wing, Center" />
+              <input
+                name="position"
+                value={form.position}
+                onChange={handleChange}
+                required
+                list="player-position-options"
+                className="input-dark"
+                placeholder="e.g. Left Wing, Right Wing, Center"
+              />
+              <datalist id="player-position-options">
+                {suggestedPositions.map((positionName) => (
+                  <option key={positionName} value={positionName} />
+                ))}
+              </datalist>
             </div>
             <div>
               <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Gender *</label>

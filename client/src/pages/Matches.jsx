@@ -20,6 +20,29 @@ export default function Matches() {
     return "text-glow bg-glow/10 border-glow/30";
   };
 
+  const scoreRows = [
+    ["P1", "period1"],
+    ["P2", "period2"],
+    ["P3", "period3"],
+    ["P4", "period4"],
+    ["OT", "overtime"],
+    ["Pen", "penalties"],
+  ];
+
+  const calculateTotals = (sheet) => {
+    if (!sheet) return { teamAScore: 0, teamBScore: 0, teamAPoints: 0, teamBPoints: 0 };
+
+    return scoreRows.reduce(
+      (totals, [, key]) => ({
+        teamAScore: totals.teamAScore + Number(sheet[key]?.teamA ?? 0),
+        teamBScore: totals.teamBScore + Number(sheet[key]?.teamB ?? 0),
+        teamAPoints: totals.teamAPoints + Number(sheet[key]?.teamAPoints ?? 0),
+        teamBPoints: totals.teamBPoints + Number(sheet[key]?.teamBPoints ?? 0),
+      }),
+      { teamAScore: 0, teamBScore: 0, teamAPoints: 0, teamBPoints: 0 }
+    );
+  };
+
   return (
     <div className="min-h-screen bg-primary px-6 py-12">
       <div className="max-w-5xl mx-auto">
@@ -67,18 +90,38 @@ export default function Matches() {
                     <p className="text-white/30 text-sm mt-2 italic">{match.notes}</p>
                   )}
                   {match.status === "completed" && match.scoreSheet && (
-                    <div className="mt-3 text-xs text-white/50 space-y-1">
-                      <p>
-                        Score Sheet: P1 {match.scoreSheet.period1?.teamA ?? 0}-{match.scoreSheet.period1?.teamB ?? 0},
-                        P2 {match.scoreSheet.period2?.teamA ?? 0}-{match.scoreSheet.period2?.teamB ?? 0},
-                        P3 {match.scoreSheet.period3?.teamA ?? 0}-{match.scoreSheet.period3?.teamB ?? 0},
-                        P4 {match.scoreSheet.period4?.teamA ?? 0}-{match.scoreSheet.period4?.teamB ?? 0}
-                      </p>
-                      {(match.scoreSheet.overtime?.teamA || match.scoreSheet.overtime?.teamB) ? (
-                        <p>Overtime: {match.scoreSheet.overtime?.teamA ?? 0}-{match.scoreSheet.overtime?.teamB ?? 0}</p>
-                      ) : null}
-                      {(match.scoreSheet.penalties?.teamA || match.scoreSheet.penalties?.teamB) ? (
-                        <p>Penalties: {match.scoreSheet.penalties?.teamA ?? 0}-{match.scoreSheet.penalties?.teamB ?? 0}</p>
+                    <div className="mt-4 overflow-x-auto rounded-lg border border-white/10">
+                      <table className="w-full min-w-[760px] text-xs">
+                        <thead className="bg-white/5 text-white/60 uppercase tracking-wider">
+                          <tr>
+                            <th className="px-3 py-2 text-left">Period</th>
+                            <th className="px-3 py-2 text-left">{match.teamA || "Team A"} Score</th>
+                            <th className="px-3 py-2 text-left">{match.teamB || match.opponent || "Team B"} Score</th>
+                            <th className="px-3 py-2 text-left">{match.teamA || "Team A"} Points</th>
+                            <th className="px-3 py-2 text-left">{match.teamB || match.opponent || "Team B"} Points</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {scoreRows.map(([label, key]) => (
+                            <tr key={key} className="border-t border-white/10 text-white/70">
+                              <td className="px-3 py-2 font-medium">{label}</td>
+                              <td className="px-3 py-2">{match.scoreSheet?.[key]?.teamA ?? 0}</td>
+                              <td className="px-3 py-2">{match.scoreSheet?.[key]?.teamB ?? 0}</td>
+                              <td className="px-3 py-2">{match.scoreSheet?.[key]?.teamAPoints ?? 0}</td>
+                              <td className="px-3 py-2">{match.scoreSheet?.[key]?.teamBPoints ?? 0}</td>
+                            </tr>
+                          ))}
+                          <tr className="border-t border-white/20 bg-white/5 text-white">
+                            <td className="px-3 py-2 font-semibold">Totals</td>
+                            <td className="px-3 py-2 font-semibold">{calculateTotals(match.scoreSheet).teamAScore}</td>
+                            <td className="px-3 py-2 font-semibold">{calculateTotals(match.scoreSheet).teamBScore}</td>
+                            <td className="px-3 py-2 font-semibold">{calculateTotals(match.scoreSheet).teamAPoints}</td>
+                            <td className="px-3 py-2 font-semibold">{calculateTotals(match.scoreSheet).teamBPoints}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      {match.scoreSheet?.notes ? (
+                        <p className="px-3 py-2 border-t border-white/10 text-white/40 text-xs">Notes: {match.scoreSheet.notes}</p>
                       ) : null}
                     </div>
                   )}

@@ -4,13 +4,19 @@ import { getMatches, createMatch, updateMatch, deleteMatch } from "../../service
 const emptyForm = {
   teamA: "Skyliners", teamB: "", opponent: "", date: "", venue: "",
   competition: "Friendly", status: "upcoming",
-  skylinerScore: "", opponentScore: "", outcome: "", notes: "",
+  outcome: "", notes: "",
   p1TeamA: "0", p1TeamB: "0",
+  p1TeamAPoints: "0", p1TeamBPoints: "0",
   p2TeamA: "0", p2TeamB: "0",
+  p2TeamAPoints: "0", p2TeamBPoints: "0",
   p3TeamA: "0", p3TeamB: "0",
+  p3TeamAPoints: "0", p3TeamBPoints: "0",
   p4TeamA: "0", p4TeamB: "0",
+  p4TeamAPoints: "0", p4TeamBPoints: "0",
   otTeamA: "0", otTeamB: "0",
+  otTeamAPoints: "0", otTeamBPoints: "0",
   penTeamA: "0", penTeamB: "0",
+  penTeamAPoints: "0", penTeamBPoints: "0",
   scoreSheetNotes: "",
 };
 
@@ -21,6 +27,29 @@ export default function ManageMatches() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  const numberValue = (value) => Number(value || 0);
+
+  const scoreRows = [
+    ["period1", "P1", "p1TeamA", "p1TeamB", "p1TeamAPoints", "p1TeamBPoints"],
+    ["period2", "P2", "p2TeamA", "p2TeamB", "p2TeamAPoints", "p2TeamBPoints"],
+    ["period3", "P3", "p3TeamA", "p3TeamB", "p3TeamAPoints", "p3TeamBPoints"],
+    ["period4", "P4", "p4TeamA", "p4TeamB", "p4TeamAPoints", "p4TeamBPoints"],
+    ["overtime", "OT", "otTeamA", "otTeamB", "otTeamAPoints", "otTeamBPoints"],
+    ["penalties", "Pen", "penTeamA", "penTeamB", "penTeamAPoints", "penTeamBPoints"],
+  ];
+
+  const getTotals = () => {
+    return scoreRows.reduce(
+      (totals, [, , teamAScoreKey, teamBScoreKey, teamAPointsKey, teamBPointsKey]) => ({
+        teamAScore: totals.teamAScore + numberValue(form[teamAScoreKey]),
+        teamBScore: totals.teamBScore + numberValue(form[teamBScoreKey]),
+        teamAPoints: totals.teamAPoints + numberValue(form[teamAPointsKey]),
+        teamBPoints: totals.teamBPoints + numberValue(form[teamBPointsKey]),
+      }),
+      { teamAScore: 0, teamBScore: 0, teamAPoints: 0, teamBPoints: 0 }
+    );
+  };
+
   const load = () => getMatches().then((r) => setMatches(r.data)).catch(() => {});
   useEffect(() => { load(); }, []);
 
@@ -30,6 +59,15 @@ export default function ManageMatches() {
     e.preventDefault();
     setLoading(true);
     try {
+      const totals = getTotals();
+      const finalOutcome = form.outcome || (
+        totals.teamAScore > totals.teamBScore
+          ? "win"
+          : totals.teamAScore < totals.teamBScore
+            ? "loss"
+            : "draw"
+      );
+
       const data = {
         teamA: form.teamA,
         teamB: form.teamB,
@@ -40,17 +78,47 @@ export default function ManageMatches() {
         status: form.status,
         notes: form.notes,
         result: form.status === "completed" ? {
-          skylinerScore: Number(form.skylinerScore),
-          opponentScore: Number(form.opponentScore),
-          outcome: form.outcome,
+          skylinerScore: totals.teamAScore,
+          opponentScore: totals.teamBScore,
+          outcome: finalOutcome,
         } : undefined,
         scoreSheet: {
-          period1: { teamA: Number(form.p1TeamA || 0), teamB: Number(form.p1TeamB || 0) },
-          period2: { teamA: Number(form.p2TeamA || 0), teamB: Number(form.p2TeamB || 0) },
-          period3: { teamA: Number(form.p3TeamA || 0), teamB: Number(form.p3TeamB || 0) },
-          period4: { teamA: Number(form.p4TeamA || 0), teamB: Number(form.p4TeamB || 0) },
-          overtime: { teamA: Number(form.otTeamA || 0), teamB: Number(form.otTeamB || 0) },
-          penalties: { teamA: Number(form.penTeamA || 0), teamB: Number(form.penTeamB || 0) },
+          period1: {
+            teamA: numberValue(form.p1TeamA),
+            teamB: numberValue(form.p1TeamB),
+            teamAPoints: numberValue(form.p1TeamAPoints),
+            teamBPoints: numberValue(form.p1TeamBPoints),
+          },
+          period2: {
+            teamA: numberValue(form.p2TeamA),
+            teamB: numberValue(form.p2TeamB),
+            teamAPoints: numberValue(form.p2TeamAPoints),
+            teamBPoints: numberValue(form.p2TeamBPoints),
+          },
+          period3: {
+            teamA: numberValue(form.p3TeamA),
+            teamB: numberValue(form.p3TeamB),
+            teamAPoints: numberValue(form.p3TeamAPoints),
+            teamBPoints: numberValue(form.p3TeamBPoints),
+          },
+          period4: {
+            teamA: numberValue(form.p4TeamA),
+            teamB: numberValue(form.p4TeamB),
+            teamAPoints: numberValue(form.p4TeamAPoints),
+            teamBPoints: numberValue(form.p4TeamBPoints),
+          },
+          overtime: {
+            teamA: numberValue(form.otTeamA),
+            teamB: numberValue(form.otTeamB),
+            teamAPoints: numberValue(form.otTeamAPoints),
+            teamBPoints: numberValue(form.otTeamBPoints),
+          },
+          penalties: {
+            teamA: numberValue(form.penTeamA),
+            teamB: numberValue(form.penTeamB),
+            teamAPoints: numberValue(form.penTeamAPoints),
+            teamBPoints: numberValue(form.penTeamBPoints),
+          },
           notes: form.scoreSheetNotes || "",
         },
       };
@@ -82,22 +150,32 @@ export default function ManageMatches() {
       venue: match.venue,
       competition: match.competition,
       status: match.status,
-      skylinerScore: match.result?.skylinerScore ?? "",
-      opponentScore: match.result?.opponentScore ?? "",
       outcome: match.result?.outcome || "",
       notes: match.notes || "",
       p1TeamA: String(match.scoreSheet?.period1?.teamA ?? 0),
       p1TeamB: String(match.scoreSheet?.period1?.teamB ?? 0),
+      p1TeamAPoints: String(match.scoreSheet?.period1?.teamAPoints ?? 0),
+      p1TeamBPoints: String(match.scoreSheet?.period1?.teamBPoints ?? 0),
       p2TeamA: String(match.scoreSheet?.period2?.teamA ?? 0),
       p2TeamB: String(match.scoreSheet?.period2?.teamB ?? 0),
+      p2TeamAPoints: String(match.scoreSheet?.period2?.teamAPoints ?? 0),
+      p2TeamBPoints: String(match.scoreSheet?.period2?.teamBPoints ?? 0),
       p3TeamA: String(match.scoreSheet?.period3?.teamA ?? 0),
       p3TeamB: String(match.scoreSheet?.period3?.teamB ?? 0),
+      p3TeamAPoints: String(match.scoreSheet?.period3?.teamAPoints ?? 0),
+      p3TeamBPoints: String(match.scoreSheet?.period3?.teamBPoints ?? 0),
       p4TeamA: String(match.scoreSheet?.period4?.teamA ?? 0),
       p4TeamB: String(match.scoreSheet?.period4?.teamB ?? 0),
+      p4TeamAPoints: String(match.scoreSheet?.period4?.teamAPoints ?? 0),
+      p4TeamBPoints: String(match.scoreSheet?.period4?.teamBPoints ?? 0),
       otTeamA: String(match.scoreSheet?.overtime?.teamA ?? 0),
       otTeamB: String(match.scoreSheet?.overtime?.teamB ?? 0),
+      otTeamAPoints: String(match.scoreSheet?.overtime?.teamAPoints ?? 0),
+      otTeamBPoints: String(match.scoreSheet?.overtime?.teamBPoints ?? 0),
       penTeamA: String(match.scoreSheet?.penalties?.teamA ?? 0),
       penTeamB: String(match.scoreSheet?.penalties?.teamB ?? 0),
+      penTeamAPoints: String(match.scoreSheet?.penalties?.teamAPoints ?? 0),
+      penTeamBPoints: String(match.scoreSheet?.penalties?.teamBPoints ?? 0),
       scoreSheetNotes: match.scoreSheet?.notes || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -166,14 +244,6 @@ export default function ManageMatches() {
             {form.status === "completed" && (
               <>
                 <div>
-                  <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Skyliners Score</label>
-                  <input name="skylinerScore" value={form.skylinerScore} onChange={handleChange} type="number" className="input-dark" placeholder="0" />
-                </div>
-                <div>
-                  <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Opponent Score</label>
-                  <input name="opponentScore" value={form.opponentScore} onChange={handleChange} type="number" className="input-dark" placeholder="0" />
-                </div>
-                <div>
                   <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Outcome</label>
                   <select name="outcome" value={form.outcome} onChange={handleChange} className="input-dark">
                     <option value="">Select outcome</option>
@@ -185,25 +255,45 @@ export default function ManageMatches() {
 
                 <div className="md:col-span-2 mt-2">
                   <h3 className="text-white/70 text-xs uppercase tracking-wider mb-3">Rollball Score Sheet</h3>
-                  <div className="grid grid-cols-3 gap-2 text-xs text-white/50 mb-2">
-                    <span>Period</span>
-                    <span>{form.teamA || "Team A"}</span>
-                    <span>{form.teamB || "Team B"}</span>
+                  <div className="overflow-x-auto rounded-lg border border-white/10">
+                    <table className="w-full min-w-[760px] text-sm">
+                      <thead className="bg-white/5 text-white/60 uppercase tracking-wider text-xs">
+                        <tr>
+                          <th className="px-3 py-3 text-left">Period</th>
+                          <th className="px-3 py-3 text-left">{form.teamA || "Team A"} Score</th>
+                          <th className="px-3 py-3 text-left">{form.teamB || "Team B"} Score</th>
+                          <th className="px-3 py-3 text-left">{form.teamA || "Team A"} Points</th>
+                          <th className="px-3 py-3 text-left">{form.teamB || "Team B"} Points</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {scoreRows.map(([, label, teamAScoreKey, teamBScoreKey, teamAPointsKey, teamBPointsKey]) => (
+                          <tr key={label} className="border-t border-white/10">
+                            <td className="px-3 py-2 text-white/70 font-medium">{label}</td>
+                            <td className="px-3 py-2">
+                              <input name={teamAScoreKey} value={form[teamAScoreKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input name={teamBScoreKey} value={form[teamBScoreKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input name={teamAPointsKey} value={form[teamAPointsKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input name={teamBPointsKey} value={form[teamBPointsKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
+                            </td>
+                          </tr>
+                        ))}
+                        <tr className="border-t border-white/20 bg-white/5">
+                          <td className="px-3 py-3 text-white font-semibold">Totals</td>
+                          <td className="px-3 py-3 text-white font-semibold">{getTotals().teamAScore}</td>
+                          <td className="px-3 py-3 text-white font-semibold">{getTotals().teamBScore}</td>
+                          <td className="px-3 py-3 text-white font-semibold">{getTotals().teamAPoints}</td>
+                          <td className="px-3 py-3 text-white font-semibold">{getTotals().teamBPoints}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  {[
-                    ["P1", "p1TeamA", "p1TeamB"],
-                    ["P2", "p2TeamA", "p2TeamB"],
-                    ["P3", "p3TeamA", "p3TeamB"],
-                    ["P4", "p4TeamA", "p4TeamB"],
-                    ["OT", "otTeamA", "otTeamB"],
-                    ["Pen", "penTeamA", "penTeamB"],
-                  ].map(([label, aKey, bKey]) => (
-                    <div key={label} className="grid grid-cols-3 gap-2 mb-2">
-                      <div className="input-dark flex items-center justify-center text-white/60">{label}</div>
-                      <input name={aKey} value={form[aKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
-                      <input name={bKey} value={form[bKey]} onChange={handleChange} type="number" className="input-dark" min="0" />
-                    </div>
-                  ))}
                   <div className="mt-2">
                     <label className="block text-white/50 text-xs uppercase tracking-wider mb-2">Score Sheet Notes</label>
                     <textarea name="scoreSheetNotes" value={form.scoreSheetNotes} onChange={handleChange} className="input-dark h-20 resize-none" placeholder="Scorers, key moments, officials, etc." />
